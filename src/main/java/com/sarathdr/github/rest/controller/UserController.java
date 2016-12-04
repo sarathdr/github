@@ -29,6 +29,13 @@ public class UserController {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * Handles the api request to retrieve user's top 5 git repositories
+     * Api {@code 'user/{git-handle}'} with parameter {@code type} values {@code all | owner | member}
+     * @param handle the gitHub handle path variable
+     * @param type the type parameter
+     * @return the top 5 git repo
+     */
     @RequestMapping("/user/{handle}")
     public Repo[] getUserRepos(
             @PathVariable final String handle,
@@ -47,12 +54,13 @@ public class UserController {
 
         logger.info("Got response size: " + repos.length);
 
+        // Sort to get the top 5
         Arrays.sort(
                 repos,
                 (Repo a, Repo b) -> Integer.compare(b.getSize(), a.getSize())
         );
 
-
+        // Get only top 5
         return repos.length > 5
                 ? Arrays.copyOfRange(repos, 0, 5)
                 : repos;
