@@ -3,7 +3,7 @@ Git Hub sample api
 
 Url: https://peaceful-inlet-71730.herokuapp.com/
 
-Usage user's top 5 repo: https://peaceful-inlet-71730.herokuapp.com/user/{git-hub-handle}
+Rest api to get top 5 repo: https://peaceful-inlet-71730.herokuapp.com/user/{git-hub-handle}
 
 Eg: https://peaceful-inlet-71730.herokuapp.com/user/sarathdr
 
