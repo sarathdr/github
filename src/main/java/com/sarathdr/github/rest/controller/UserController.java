@@ -1,7 +1,6 @@
 package com.sarathdr.github.rest.controller;
 
 import com.sarathdr.github.model.Repo;
-import com.sarathdr.github.model.RepoList;
 import com.sarathdr.github.util.UrlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -41,9 +40,21 @@ public class UserController {
         final Map<String, String> params = new HashMap<>();
         params.put("type", type);
 
-        return restTemplate.getForObject(
+        final Repo[] repos = restTemplate.getForObject(
                 urlBuilder.getUserRepoUrl(handle),
                 Repo[].class,
                 params);
+
+        logger.info("Got response size: " + repos.length);
+
+        Arrays.sort(
+                repos,
+                (Repo a, Repo b) -> Integer.compare(b.getSize(), a.getSize())
+        );
+
+
+        return repos.length > 5
+                ? Arrays.copyOfRange(repos, 0, 5)
+                : repos;
     }
 }

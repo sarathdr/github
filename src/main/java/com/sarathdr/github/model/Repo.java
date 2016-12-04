@@ -1,17 +1,20 @@
 package com.sarathdr.github.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by sarathdr on 03/12/2016.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Repo {
 
     private long id;
+
     private String name;
+
+    @JsonProperty("full_name")
     private String fullName;
+
     private int size;
+
     private String url;
 
     public long getId() {
