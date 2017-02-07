@@ -13,7 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -32,12 +34,13 @@ public class UserController {
     /**
      * Handles the api request to retrieve user's top 5 git repositories
      * Api {@code 'user/{git-handle}'} with parameter {@code type} values {@code all | owner | member}
+     *
      * @param handle the gitHub handle path variable
-     * @param type the type parameter
+     * @param type   the type parameter
      * @return the top 5 git repo
      */
     @RequestMapping("/user/{handle}")
-    public Repo[] getUserRepos(
+    public List<Repo> getUserRepos(
             @PathVariable final String handle,
             @RequestParam(value = "type", defaultValue = "owner") final String type
     ) {
@@ -51,18 +54,11 @@ public class UserController {
                 urlBuilder.getUserRepoUrl(handle),
                 Repo[].class,
                 params);
-
         logger.info("Got response size: " + repos.length);
 
-        // Sort to get the top 5
-        Arrays.sort(
-                repos,
-                (Repo a, Repo b) -> Integer.compare(b.getSize(), a.getSize())
-        );
+        return Arrays.stream(repos)
+                .sorted((Repo a, Repo b) -> Integer.compare(b.getSize(), a.getSize()))
+                .limit(5).collect(Collectors.toList());
 
-        // Get only top 5
-        return repos.length > 5
-                ? Arrays.copyOfRange(repos, 0, 5)
-                : repos;
     }
 }
