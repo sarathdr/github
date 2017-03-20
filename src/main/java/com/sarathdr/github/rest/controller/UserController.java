@@ -50,13 +50,10 @@ public class UserController {
         final Map<String, String> params = new HashMap<>();
         params.put("type", type);
 
-        final Repo[] repos = restTemplate.getForObject(
+        return Arrays.stream(restTemplate.getForObject(
                 urlBuilder.getUserRepoUrl(handle),
                 Repo[].class,
-                params);
-        logger.info("Got response size: " + repos.length);
-
-        return Arrays.stream(repos)
+                params))
                 .sorted((Repo a, Repo b) -> Integer.compare(b.getSize(), a.getSize()))
                 .limit(5).collect(Collectors.toList());
 
